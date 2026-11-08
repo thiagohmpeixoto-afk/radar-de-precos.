@@ -1,180 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b1020">
-<title>Radar de Bugs 1.0</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radar de Bugs 2.0</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b1020;color:#f1f5ff;font:15px Arial,sans-serif}
-main{max-width:700px;margin:auto;padding:20px}
-h1{margin-bottom:5px}
-h2{font-size:19px}
-p{line-height:1.5}
-.card{background:#19253c;border:1px solid #344764;border-radius:15px;padding:17px;margin:16px 0}
-.muted{color:#aab8d0}
-input,button{font:inherit;border-radius:9px;padding:13px}
-input{width:100%;background:#101a2c;border:1px solid #52617d;color:white;margin:8px 0}
-button{border:0;background:#7568ed;color:white;font-weight:bold;margin:6px 5px 6px 0;cursor:pointer}
-button:disabled{opacity:.5}
-.green{color:#84efb4}
-.item{border-top:1px solid #35445f;padding:15px 0}
-a{color:#c2bbff}
-#log{white-space:pre-wrap;overflow-wrap:anywhere}
+body{font:16px system-ui;background:#0b1020;color:#e8efff;margin:0}
+main{max-width:680px;margin:auto;padding:20px}
+.card{background:#1a2740;padding:18px;border-radius:14px;margin:15px 0;border:1px solid #344765}
+button{background:#7668ed;color:white;border:0;border-radius:9px;padding:13px;font-weight:700}
+small{color:#aab9d0}
+li{padding:8px 0;border-bottom:1px solid #344765}
+.ok{color:#8ce6b3}
+.fail{color:#ffbf94}
 </style>
 </head>
 <body>
 <main>
 <h1>📡 Radar de Bugs</h1>
-<p class="muted">Todas as categorias • Desconto mínimo: 70% • Sem limite de preço</p>
-<section class="card">
-<h2>🔎 Varredura automática</h2>
-<p class="muted">Fonte experimental: Mercado Livre Brasil</p>
-<input id="query" placeholder="Opcional: pesquisar produto específico">
-<button id="start" onclick="scan()">▶ Iniciar varredura</button>
-<button onclick="stop()">Parar</button>
-<p id="status" class="muted">Aguardando pesquisa.</p>
-</section>
-<section class="card">
-<h2>🔥 Possíveis bugs: <span id="count">0</span></h2>
-<p class="muted">Descontos calculados usando o preço anterior informado pelo anúncio. Não são necessariamente erros reais.</p>
-<div id="results">Nenhuma pesquisa realizada.</div>
-</section>
-<section class="card">
-<h2>📋 Diagnóstico</h2>
-<p id="log" class="muted">Nenhuma consulta realizada.</p>
-<button onclick="exportar()">Exportar resultados</button>
-</section>
-<p class="muted">Versão experimental. A API pode bloquear requisições do navegador. Não há monitoramento em segundo plano.</p>
+<small>Versão 2.0 • 8 lojas • 70% ou mais • Sem limite de preço</small>
+<div class="card">
+<h2>Estado da coleta</h2>
+<button onclick="load()">Atualizar diagnóstico</button>
+<p id="when">Aguardando resultados.</p>
+<ul id="stores"></ul>
+</div>
+<div class="card">
+<h2>Possíveis bugs verificados</h2>
+<p id="offers">Nenhuma oportunidade validada. A comparação histórica de preços ainda não está implementada.</p>
+</div>
+<p><small>O GitHub Actions executará as consultas após ser configurado. O navegador apenas lê os resultados. Nenhuma oferta é inventada.</small></p>
 </main>
 <script>
-const termos=[
-'smartphone','notebook','televisão','geladeira',
-'fogão','máquina de lavar','furadeira',
-'bicicleta','sofá','cama','ar condicionado',
-'tênis','perfume','brinquedo','videogame',
-'monitor','microondas','aspirador',
-'cadeira','ferramentas'
-];
-const el=id=>document.getElementById(id);
-const moeda=n=>Number(n).toLocaleString('pt-BR',{
-style:'currency',currency:'BRL'
-});
-let controle=null;
-let ofertas=[];
-let registros=[];
-function log(msg){
-registros.unshift(new Date().toLocaleTimeString('pt-BR')+' - '+msg);
-el('log').textContent=registros.join('\n');
-}
-function stop(){
-if(controle)controle.abort();
-controle=null;
-el('start').disabled=false;
-el('status').textContent='Varredura interrompida.';
-}
-function mostrar(){
-el('count').textContent=ofertas.length;
-const area=el('results');
-area.replaceChildren();
-if(!ofertas.length){
-area.textContent='Nenhuma oferta acima de 70% encontrada nesta amostra.';
-return;
-}
-for(const o of ofertas){
-const div=document.createElement('div');
-div.className='item';
-const titulo=document.createElement('strong');
-titulo.textContent=o.nome;
-const preco=document.createElement('p');
-preco.className='green';
-preco.textContent=moeda(o.preco)+' | '+o.desconto.toFixed(1)+'% abaixo';
-const ref=document.createElement('p');
-ref.textContent='Preço anterior anunciado: '+moeda(o.referencia);
-const link=document.createElement('a');
-link.href=o.link;
-link.target='_blank';
-link.rel='noopener noreferrer';
-link.textContent='Ver anúncio na loja ↗';
-div.append(titulo,preco,ref,link);
-area.append(div);
-}
-}
-async function scan(){
-if(controle)return;
-controle=new AbortController();
-el('start').disabled=true;
-ofertas=[];
-registros=[];
-mostrar();
-const digitado=el('query').value.trim();
-const buscas=digitado?[digitado]:termos;
-let total=0;
-let falhas=0;
-for(let i=0;i<buscas.length;i++){
-if(!controle)break;
-const termo=buscas[i];
-el('status').textContent='Pesquisando '+(i+1)+'/'+buscas.length+': '+termo;
+async function load(){
+const w=document.getElementById('when');
+const list=document.getElementById('stores');
+w.textContent='Carregando...';
 try{
-const url='https://api.mercadolibre.com/sites/MLB/search?q='+
-encodeURIComponent(termo)+'&limit=50';
-const resposta=await fetch(url,{
-signal:controle.signal,
-headers:{Accept:'application/json'}
-});
-if(!resposta.ok)throw Error('HTTP '+resposta.status);
-const dados=await resposta.json();
-if(!Array.isArray(dados.results))throw Error('Resposta inválida');
-total+=dados.results.length;
-for(const p of dados.results){
-const preco=Number(p.price);
-const anterior=Number(p.original_price);
-if(!(preco>0&&anterior>preco))continue;
-if(typeof p.permalink!=='string'||!p.permalink.startsWith('https://'))continue;
-const desconto=(1-preco/anterior)*100;
-if(desconto<70)continue;
-if(ofertas.some(x=>x.id===p.id))continue;
-ofertas.push({
-id:p.id,nome:p.title,preco,
-referencia:anterior,desconto,
-link:p.permalink
-});
+const r=await fetch('./results.json?t='+Date.now(),{cache:'no-store'});
+if(!r.ok)throw Error('HTTP '+r.status);
+const d=await r.json();
+w.textContent='Última execução: '+new Date(d.generated_at).toLocaleString('pt-BR');
+list.replaceChildren();
+for(const s of d.sources){
+const li=document.createElement('li');
+li.textContent=s.store+' — '+(s.status==='prices_extracted'?'Preços estruturados extraídos':'Coleta não validada')+' ('+s.products_extracted+' produtos)';
+li.className=s.status==='prices_extracted'?'ok':'fail';
+list.append(li);
 }
-ofertas.sort((a,b)=>b.desconto-a.desconto);
-mostrar();
-log(termo+': '+dados.results.length+' anúncios consultados');
+document.getElementById('offers').textContent=d.offers?.length?JSON.stringify(d.offers):'Nenhuma oportunidade acima de 70% validada. Falta estabelecer referências confiáveis.';
 }catch(e){
-if(e.name==='AbortError')break;
-falhas++;
-log(termo+': '+e.message);
-if(falhas>=2){
-log('Fonte indisponível ou bloqueada. Será necessária uma integração autorizada.');
-break;
+w.textContent='Ainda não há diagnóstico publicado: '+e.message;
 }
 }
-}
-if(controle){
-controle=null;
-el('start').disabled=false;
-el('status').textContent='Concluído: '+total+
-' anúncios recebidos; '+ofertas.length+
-' possíveis bugs. '+(falhas?'Algumas consultas falharam.':'');
-}
-}
-function exportar(){
-const dados=JSON.stringify({
-data:new Date().toISOString(),
-descontoMinimo:70,
-ofertas,registros
-},null,2);
-const blob=new Blob([dados],{type:'application/json'});
-const a=document.createElement('a');
-a.href=URL.createObjectURL(blob);
-a.download='radar-bugs.json';
-a.click();
-setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
+load();
 </script>
 </body>
 </html>
