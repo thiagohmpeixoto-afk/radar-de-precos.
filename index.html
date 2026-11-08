@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Radar de Preços</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#f1f5ff;font-family:Arial,sans-serif}
+main{max-width:650px;margin:auto;padding:20px}
+h1{font-size:27px;margin-bottom:5px}
+h2{font-size:19px}
+small,p.info{color:#aab6cd}
+.card{background:#19243a;border:1px solid #34435e;border-radius:15px;padding:17px;margin:16px 0}
+input{width:100%;padding:13px;margin:7px 0 13px;background:#0e1729;color:white;border:1px solid #53617b;border-radius:9px;font-size:16px}
+button{padding:13px;background:#7568ef;color:white;border:0;border-radius:9px;font-weight:bold;margin:5px 5px 5px 0;cursor:pointer}
+.green{background:#16885c}
+.item{padding:14px 0;border-bottom:1px solid #39455b}
+.price{font-size:23px;color:#83edb4;font-weight:bold}
+.tag{color:#b1f1cf}
+a{color:#c0baff}
+</style>
+</head>
+<body>
+<main>
+<h1>📡 Radar de Preços</h1>
+<small>Versão 0.1 • Monitor de oportunidades</small>
+<section class="card">
+<h2>🔎 Pesquisar produtos</h2>
+<input id="busca" placeholder="Ex.: notebook, geladeira, ferramentas">
+<button onclick="pesquisar('ml')">Mercado Livre ↗</button>
+<button onclick="pesquisar('google')">Google Shopping ↗</button>
+<p class="info">As pesquisas abrem as lojas. A coleta automática será desenvolvida em uma próxima versão.</p>
+</section>
+<section class="card">
+<h2>📊 Analisar uma oferta</h2>
+<input id="produto" placeholder="Nome do produto">
+<input id="preco" type="number" min="0.01" step="0.01" placeholder="Preço encontrado em R$">
+<input id="referencia" type="number" min="0.01" step="0.01" placeholder="Preço normal em R$">
+<input id="loja" placeholder="Nome da loja">
+<input id="link" type="url" placeholder="Link da oferta (opcional)">
+<button class="green" onclick="salvar()">Comparar e salvar</button>
+<p class="info">O preço normal é informado por você. Descontos elevados não garantem ofertas legítimas.</p>
+</section>
+<section class="card">
+<h2>🔥 Oportunidades salvas</h2>
+<div id="resultados"></div>
+<button onclick="exportar()">Exportar histórico</button>
+</section>
+<p class="info">Histórico armazenado neste navegador. Sem monitoramento automático ou notificações nesta versão.</p>
+</main>
+<script>
+const chave='radar-precos-v01';
+let ofertas=[];
+try{
+const dados=JSON.parse(localStorage.getItem(chave)||'[]');
+if(Array.isArray(dados))ofertas=dados;
+}catch(e){}
+const campo=id=>document.getElementById(id);
+const moeda=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function pesquisar(tipo){
+const q=campo('busca').value.trim();
+if(!q)return alert('Digite o produto que deseja pesquisar.');
+const url=tipo==='ml'
+?'https://lista.mercadolivre.com.br/'+encodeURIComponent(q)
+:'https://www.google.com/search?tbm=shop&q='+encodeURIComponent(q);
+window.open(url,'_blank','noopener');
+}
+function salvar(){
+const nome=campo('produto').value.trim();
+const preco=Number(campo('preco').value);
+const ref=Number(campo('referencia').value);
+const loja=campo('loja').value.trim();
+const link=campo('link').value.trim();
+if(!nome||!Number.isFinite(preco)||!Number.isFinite(ref)||preco<=0||ref<=0)
+return alert('Informe o produto e os dois preços corretamente.');
+if(link&&!/^https?:\/\//i.test(link))
+return alert('O link deve começar com https://');
+ofertas.unshift({nome,preco,ref,loja,link,data:new Date().toLocaleString('pt-BR')});
+localStorage.setItem(chave,JSON.stringify(ofertas));
+['produto','preco','referencia','loja','link'].forEach(id=>campo(id).value='');
+mostrar();
+}
+function mostrar(){
+const area=campo('resultados');
+area.replaceChildren();
+if(!ofertas.length){area.textContent='Nenhuma oferta cadastrada ainda.';return;}
+ofertas.forEach(o=>{
+const desconto=(1-o.preco/o.ref)*100;
+const div=document.createElement('div');
+div.className='item';
+const titulo=document.createElement('strong');
+titulo.textContent=o.nome;
+const valor=document.createElement('p');
+valor.className='price';
+valor.textContent=moeda(o.preco);
+const detalhe=document.createElement('p');
+detalhe.textContent='Referência: '+moeda(o.ref)+' | '+(o.loja||'Loja não informada');
+const status=document.createElement('p');
+status.className='tag';
+status.textContent=desconto>=30?'🔥 Oportunidade acima de 30%':desconto>=15?'Possível oportunidade':desconto>=0?'Desconto de '+desconto.toFixed(1)+'%':'Preço acima da referência';
+div.append(titulo,valor,detalhe,status);
+if(o.link){
+try{
+const url=new URL(o.link);
+if(['https:','http:'].includes(url.protocol)){
+const a=document.createElement('a');
+a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Ver anúncio ↗';
+div.append(a);
+}
+}catch(e){}
+}
+area.append(div);
+});
+}
+function exportar(){
+const blob=new Blob([JSON.stringify(ofertas,null,2)],{type:'application/json'});
+const a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='historico-radar.json';
+a.click();
+setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+mostrar();
+</script>
+</body>
+</html>
