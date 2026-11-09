@@ -1,7 +1,7 @@
 import json
 import re
-import urllib.request
 import urllib.error
+import urllib.request
 from datetime import datetime, timezone
 from html import unescape
 
@@ -13,8 +13,15 @@ STORES = {
     "Mercado Livre": "https://www.mercadolivre.com.br",
     "Ponto": "https://www.pontofrio.com.br",
     "Carrefour": "https://www.carrefour.com.br",
-    "Fast Shop": "https://www.fastshop.com.br"
+    "Fast Shop": "https://www.fastshop.com.br",
+    "Pichau": "https://www.pichau.com.br",
+    "TerabyteShop": "https://www.terabyteshop.com.br",
+    "Kalunga": "https://www.kalunga.com.br",
+    "Lojas Colombo": "https://www.colombo.com.br",
+    "Decathlon": "https://www.decathlon.com.br",
+    "Leroy Merlin": "https://www.leroymerlin.com.br"
 }
+
 
 def extract_products(page):
     products = []
@@ -65,6 +72,7 @@ def extract_products(page):
 
     return products[:100]
 
+
 def scan(name, url):
     result = {
         "store": name,
@@ -107,6 +115,7 @@ def scan(name, url):
 
     return result
 
+
 def main():
     sources = []
 
@@ -118,7 +127,7 @@ def main():
 
     report = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "minimum_discount": 70,
+        "minimum_discount": None,
         "maximum_price": None,
         "sources": sources,
         "offers": []
@@ -128,6 +137,7 @@ def main():
         json.dump(report, file, ensure_ascii=False, indent=2)
 
     print("Diagnostico salvo em results.json")
+
 
 if __name__ == "__main__":
     main()
