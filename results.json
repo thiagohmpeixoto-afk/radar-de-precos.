@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-11-09T19:18:03.485311+00:00",
+  "minimum_discount": 70,
+  "maximum_price": null,
+  "sources": [
+    {
+      "store": "KaBuM!",
+      "url": "https://www.kabum.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Magazine Luiza",
+      "url": "https://www.magazineluiza.com.br",
+      "status": "blocked_or_http_error",
+      "products_extracted": 0,
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "store": "Casas Bahia",
+      "url": "https://www.casasbahia.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Amazon Brasil",
+      "url": "https://www.amazon.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Mercado Livre",
+      "url": "https://www.mercadolivre.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Ponto",
+      "url": "https://www.pontofrio.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Carrefour",
+      "url": "https://www.carrefour.com.br",
+      "status": "blocked_or_http_error",
+      "products_extracted": 0,
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "store": "Fast Shop",
+      "url": "https://www.fastshop.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    }
+  ],
+  "offers": []
+}
