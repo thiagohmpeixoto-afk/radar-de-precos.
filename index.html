@@ -19,7 +19,7 @@ li{padding:8px 0;border-bottom:1px solid #344765}
 <body>
 <main>
 <h1>📡 Radar de Bugs</h1>
-<small>Versão 2.0 • 8 lojas • 70% ou mais • Sem limite de preço</small>
+<small>Versão 2.0 • Sem desconto mínimo • Sem limite de preço</small>
 <div class="card">
 <h2>Estado da coleta</h2>
 <button onclick="load()">Atualizar diagnóstico</button>
@@ -27,32 +27,44 @@ li{padding:8px 0;border-bottom:1px solid #344765}
 <ul id="stores"></ul>
 </div>
 <div class="card">
-<h2>Possíveis bugs verificados</h2>
-<p id="offers">Nenhuma oportunidade validada. A comparação histórica de preços ainda não está implementada.</p>
+<h2>Possíveis erros de preço</h2>
+<p id="offers">Aguardando diagnóstico.</p>
 </div>
-<p><small>O GitHub Actions executará as consultas após ser configurado. O navegador apenas lê os resultados. Nenhuma oferta é inventada.</small></p>
+<p><small>O GitHub Actions roda o scanner. Este painel exibe o último diagnóstico publicado.</small></p>
 </main>
 <script>
-async function load(){
-const w=document.getElementById('when');
-const list=document.getElementById('stores');
-w.textContent='Carregando...';
-try{
-const r=await fetch('./results.json?t='+Date.now(),{cache:'no-store'});
-if(!r.ok)throw Error('HTTP '+r.status);
-const d=await r.json();
-w.textContent='Última execução: '+new Date(d.generated_at).toLocaleString('pt-BR');
-list.replaceChildren();
-for(const s of d.sources){
-const li=document.createElement('li');
-li.textContent=s.store+' — '+(s.status==='prices_extracted'?'Preços estruturados extraídos':'Coleta não validada')+' ('+s.products_extracted+' produtos)';
-li.className=s.status==='prices_extracted'?'ok':'fail';
-list.append(li);
-}
-document.getElementById('offers').textContent=d.offers?.length?JSON.stringify(d.offers):'Nenhuma oportunidade acima de 70% validada. Falta estabelecer referências confiáveis.';
-}catch(e){
-w.textContent='Ainda não há diagnóstico publicado: '+e.message;
-}
+async function load() {
+  const when = document.getElementById('when');
+  const list = document.getElementById('stores');
+  const offers = document.getElementById('offers');
+  when.textContent = 'Carregando...';
+
+  try {
+    const response = await fetch('./results.json?t=' + Date.now(), {
+      cache: 'no-store'
+    });
+    if (!response.ok) throw Error('HTTP ' + response.status);
+
+    const report = await response.json();
+    when.textContent = 'Última execução: ' +
+      new Date(report.generated_at).toLocaleString('pt-BR');
+
+    list.replaceChildren();
+    for (const source of report.sources) {
+      const item = document.createElement('li');
+      const extracted = source.status === 'prices_extracted';
+      const status = extracted ? 'Preços estruturados extraídos' : 'Coleta não validada';
+      item.textContent = `${source.store} — ${status} (${source.products_extracted} produtos)`;
+      item.className = extracted ? 'ok' : 'fail';
+      list.append(item);
+    }
+
+    offers.textContent = report.offers?.length
+      ? JSON.stringify(report.offers)
+      : 'Nenhum possível erro de preço validado. A análise depende de referências confiáveis.';
+  } catch (error) {
+    when.textContent = 'Não foi possível carregar o diagnóstico: ' + error.message;
+  }
 }
 load();
 </script>
