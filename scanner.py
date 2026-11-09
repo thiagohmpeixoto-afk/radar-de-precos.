@@ -2,8 +2,11 @@ import json
 import re
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from html import unescape
+from pathlib import Path
+from statistics import median, quantiles
 
 STORES = {
     "KaBuM!": "https://www.kabum.com.br/hardware/ssd-2-5/ssd-pcie-nvme",
@@ -161,7 +164,63 @@ def scan(name, url):
     return result
 
 
+def load_previous_report():
+    try:
+        with open("results.json", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+
+def compare_prices(previous, sources, now):
+    today = now.date().isoformat()
+    cutoff = (now.date() - timedelta(days=30)).isoformat()
+    history = {
+        url: {day: price for day, price in daily.items() if cutoff <= day <= today}
+        for url, daily in previous.get("kabum_pix_history", {}).items()
+    }
+    history = {url: daily for url, daily in history.items() if daily}
+    offers = []
+
+    # Aproveita a última leitura publicada antes da introdução do histórico.
+    previous_day = previous.get("generated_at", "")[:10]
+    if cutoff <= previous_day <= today:
+        for source in previous.get("sources", []):
+            if source["store"] == "KaBuM!":
+                for product in source.get("observed_prices", []):
+                    history.setdefault(product["url"], {}).setdefault(
+                        previous_day, product["price"]
+                    )
+
+    for source in sources:
+        if source["store"] != "KaBuM!":
+            continue
+
+        for product in source.get("observed_prices", []):
+            daily = history.setdefault(product["url"], {})
+            past = [Decimal(price) for day, price in daily.items() if day < today]
+            current = Decimal(product["price"])
+
+            if len(past) >= 7:
+                q1, _, q3 = quantiles(past, n=4, method="inclusive")
+                lower_fence = q1 - Decimal("1.5") * (q3 - q1)
+                if current < lower_fence and current < min(past) - Decimal("1.00"):
+                    offers.append({
+                        **product,
+                        "store": source["store"],
+                        "status": "possible_price_error",
+                        "historical_median": format(median(past), ".2f"),
+                        "historical_low": format(min(past), ".2f"),
+                        "reference_days": len(past)
+                    })
+
+            daily[today] = product["price"]
+
+    return history, offers
+
+
 def main():
+    previous = load_previous_report()
     sources = []
 
     for name, url in STORES.items():
@@ -170,17 +229,22 @@ def main():
         sources.append(result)
         print(result["status"], flush=True)
 
+    now = datetime.now(timezone.utc)
+    history, offers = compare_prices(previous, sources, now)
     report = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": now.isoformat(),
         "minimum_discount": None,
         "maximum_price": None,
         "sources": sources,
-        "offers": []
+        "kabum_pix_history": history,
+        "offers": offers
     }
 
-    with open("results.json", "w", encoding="utf-8") as file:
+    pending = Path("results.json.tmp")
+    with pending.open("w", encoding="utf-8") as file:
         json.dump(report, file, ensure_ascii=False, indent=2)
 
+    pending.replace("results.json")
     print("Diagnostico salvo em results.json")
 
 
