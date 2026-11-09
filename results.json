@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-09T19:18:03.485311+00:00",
-  "minimum_discount": 70,
+  "generated_at": "2026-11-09T19:33:06.913291+00:00",
+  "minimum_discount": null,
   "maximum_price": null,
   "sources": [
     {
@@ -66,6 +66,54 @@
       "products_extracted": 0,
       "http_status": 200,
       "error": null
+    },
+    {
+      "store": "Pichau",
+      "url": "https://www.pichau.com.br",
+      "status": "blocked_or_http_error",
+      "products_extracted": 0,
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "store": "TerabyteShop",
+      "url": "https://www.terabyteshop.com.br",
+      "status": "blocked_or_http_error",
+      "products_extracted": 0,
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "store": "Kalunga",
+      "url": "https://www.kalunga.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Lojas Colombo",
+      "url": "https://www.colombo.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Decathlon",
+      "url": "https://www.decathlon.com.br",
+      "status": "no_structured_prices",
+      "products_extracted": 0,
+      "http_status": 200,
+      "error": null
+    },
+    {
+      "store": "Leroy Merlin",
+      "url": "https://www.leroymerlin.com.br",
+      "status": "blocked_or_http_error",
+      "products_extracted": 0,
+      "http_status": 403,
+      "error": "HTTP Error 403: "
     }
   ],
   "offers": []
