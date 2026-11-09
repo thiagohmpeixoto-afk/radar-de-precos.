@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from html import unescape
 
 STORES = {
-    "KaBuM!": "https://www.kabum.com.br",
+    "KaBuM!": "https://www.kabum.com.br/hardware/ssd-2-5/ssd-pcie-nvme",
     "Magazine Luiza": "https://www.magazineluiza.com.br",
     "Casas Bahia": "https://www.casasbahia.com.br",
     "Amazon Brasil": "https://www.amazon.com.br",
@@ -73,6 +73,60 @@ def extract_products(page):
     return products[:100]
 
 
+def fetch_page(url):
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; RadarDeBugs/2.0)",
+            "Accept": "text/html"
+        }
+    )
+    with urllib.request.urlopen(request, timeout=15) as response:
+        page = response.read(1500000).decode("utf-8", errors="replace")
+        return response.status, page
+
+
+def kabum_prices(products):
+    observations = []
+    urls = {
+        product["url"]: product["name"]
+        for product in products
+        if product["name"] and re.fullmatch(
+            r"https://www[.]kabum[.]com[.]br/produto/[0-9]+/[a-z0-9-]+",
+            product["url"]
+        )
+    }
+
+    for url, name in list(urls.items())[:3]:
+        try:
+            _, page = fetch_page(url)
+        except OSError as error:
+            print("KaBuM! produto indisponível para consulta:", url, error, flush=True)
+            continue
+
+        prices = set(re.findall(
+            r'R[$]\s*([0-9]+(?:[.][0-9]{3})*,[0-9]{2})</span>\s*'
+            r'(?:<span[^>]*>[^<]*(?:<!--.*?-->[^<]*)*</span>\s*)*?'
+            r'<span[^>]*>\s*à vista no PIX\s*</span>',
+            unescape(page),
+            flags=re.I
+        ))
+        if len(prices) != 1:
+            continue
+
+        amount = prices.pop().replace(".", "").replace(",", ".")
+        if float(amount) > 0:
+            observations.append({
+                "name": name,
+                "price": amount,
+                "currency": "BRL",
+                "payment": "PIX",
+                "url": url
+            })
+
+    return observations
+
+
 def scan(name, url):
     result = {
         "store": name,
@@ -83,22 +137,13 @@ def scan(name, url):
         "error": None
     }
 
-    request = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": "Mozilla/5.0 (compatible; RadarDeBugs/2.0)",
-            "Accept": "text/html"
-        }
-    )
-
     try:
-        with urllib.request.urlopen(request, timeout=15) as response:
-            result["http_status"] = response.status
-            content = response.read(1500000).decode(
-                "utf-8", errors="replace"
-            )
-
+        result["http_status"], content = fetch_page(url)
         products = extract_products(content)
+        if name == "KaBuM!":
+            products = kabum_prices(products)
+            result["observed_prices"] = products
+
         result["products_extracted"] = len(products)
         result["status"] = (
             "prices_extracted" if products else "no_structured_prices"
