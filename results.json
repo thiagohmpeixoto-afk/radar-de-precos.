@@ -1,16 +1,24 @@
 {
-  "generated_at": "2026-11-14T00:49:36.748831+00:00",
+  "generated_at": "2026-11-14T06:50:18.226536+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
     {
       "store": "KaBuM!",
       "url": "https://www.kabum.com.br/hardware/ssd-2-5/ssd-pcie-nvme",
-      "status": "no_structured_prices",
-      "products_extracted": 0,
+      "status": "prices_extracted",
+      "products_extracted": 1,
       "http_status": 200,
       "error": null,
-      "observed_prices": []
+      "observed_prices": [
+        {
+          "name": "SSD Kingston NV3, 1TB, M.2 2280, PCIe 4.0 x4, NVMe, Leitura: 6000 MB/s, Gravação: 4000 MB/s, Azul - SNV3S/1000G",
+          "price": "1149.99",
+          "currency": "BRL",
+          "payment": "PIX",
+          "url": "https://www.kabum.com.br/produto/621162/ssd-kingston-nv3-1-tb-m-2-2280-pcie-4-0-x4-nvme-leitura-6000-mb-s-gravacao-4000-mb-s-azul-snv3s-1000g"
+        }
+      ]
     },
     {
       "store": "Magazine Luiza",
@@ -33,7 +41,7 @@
       "url": "https://www.amazon.com.br",
       "status": "no_structured_prices",
       "products_extracted": 0,
-      "http_status": 202,
+      "http_status": 200,
       "error": null
     },
     {
@@ -79,10 +87,10 @@
     {
       "store": "TerabyteShop",
       "url": "https://www.terabyteshop.com.br",
-      "status": "blocked_or_http_error",
+      "status": "no_structured_prices",
       "products_extracted": 0,
-      "http_status": 403,
-      "error": "HTTP Error 403: Forbidden"
+      "http_status": 200,
+      "error": null
     },
     {
       "store": "Kalunga",
@@ -130,7 +138,8 @@
       "2026-11-10": "1149.99",
       "2026-11-11": "1149.99",
       "2026-11-12": "1149.99",
-      "2026-11-13": "1149.99"
+      "2026-11-13": "1149.99",
+      "2026-11-14": "1149.99"
     },
     "https://www.kabum.com.br/produto/632571/ssd-500gb-m-2-nvme-pcie-4-5000mb-s-leit-3000mb-s-grav-nv3-snv3s-500g-kingston": {
       "2026-11-10": "660.33",
