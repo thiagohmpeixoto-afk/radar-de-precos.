@@ -1,16 +1,24 @@
 {
-  "generated_at": "2026-11-17T12:55:53.235882+00:00",
+  "generated_at": "2026-11-17T18:53:20.980536+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
     {
       "store": "KaBuM!",
       "url": "https://www.kabum.com.br/hardware/ssd-2-5/ssd-pcie-nvme",
-      "status": "no_structured_prices",
-      "products_extracted": 0,
+      "status": "prices_extracted",
+      "products_extracted": 1,
       "http_status": 200,
       "error": null,
-      "observed_prices": []
+      "observed_prices": [
+        {
+          "name": "SSD Kingston Nv3 500 Gb Nvme M.2 2280 Leitura 5000mb/s Gravação 6000mb/s- Snv3s/500g",
+          "price": "660.33",
+          "currency": "BRL",
+          "payment": "PIX",
+          "url": "https://www.kabum.com.br/produto/632571/ssd-500gb-m-2-nvme-pcie-4-5000mb-s-leit-3000mb-s-grav-nv3-snv3s-500g-kingston"
+        }
+      ]
     },
     {
       "store": "Magazine Luiza",
