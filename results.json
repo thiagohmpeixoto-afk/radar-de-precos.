@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T00:59:22.247260+00:00",
+  "generated_at": "2026-11-18T07:04:46.341954+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
@@ -7,7 +7,7 @@
       "store": "KaBuM!",
       "url": "https://www.kabum.com.br/hardware/ssd-2-5/ssd-pcie-nvme",
       "status": "prices_extracted",
-      "products_extracted": 2,
+      "products_extracted": 1,
       "http_status": 200,
       "error": null,
       "observed_prices": [
@@ -17,13 +17,6 @@
           "currency": "BRL",
           "payment": "PIX",
           "url": "https://www.kabum.com.br/produto/621162/ssd-kingston-nv3-1-tb-m-2-2280-pcie-4-0-x4-nvme-leitura-6000-mb-s-gravacao-4000-mb-s-azul-snv3s-1000g"
-        },
-        {
-          "name": "SSD Kingston Nv3 500 Gb Nvme M.2 2280 Leitura 5000mb/s Gravação 6000mb/s- Snv3s/500g",
-          "price": "660.33",
-          "currency": "BRL",
-          "payment": "PIX",
-          "url": "https://www.kabum.com.br/produto/632571/ssd-500gb-m-2-nvme-pcie-4-5000mb-s-leit-3000mb-s-grav-nv3-snv3s-500g-kingston"
         }
       ]
     },
