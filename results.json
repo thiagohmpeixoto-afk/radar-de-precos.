@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T18:49:28.453091+00:00",
+  "generated_at": "2026-11-19T00:58:29.007065+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
@@ -7,7 +7,7 @@
       "store": "KaBuM!",
       "url": "https://www.kabum.com.br/hardware/ssd-2-5/ssd-pcie-nvme",
       "status": "prices_extracted",
-      "products_extracted": 3,
+      "products_extracted": 2,
       "http_status": 200,
       "error": null,
       "observed_prices": [
@@ -17,13 +17,6 @@
           "currency": "BRL",
           "payment": "PIX",
           "url": "https://www.kabum.com.br/produto/621162/ssd-kingston-nv3-1-tb-m-2-2280-pcie-4-0-x4-nvme-leitura-6000-mb-s-gravacao-4000-mb-s-azul-snv3s-1000g"
-        },
-        {
-          "name": "SSD Kingston 1TB Nv3 M.2 Nvme PCIe 4, Leitura 6000MB/s, Gravação 4000MB/s, Ultra Rápido - Snv3s/1000g",
-          "price": "993.00",
-          "currency": "BRL",
-          "payment": "PIX",
-          "url": "https://www.kabum.com.br/produto/633107/ssd-kingston-1tb-padrao-nv3-m-2-2280-nvme-4-0-gen-4x4-leitura-6000-e-gravacao-4000mbps-ultra-rapido-snv3s-1000g"
         },
         {
           "name": "SSD Kingston Nv3 500 Gb Nvme M.2 2280 Leitura 5000mb/s Gravação 6000mb/s- Snv3s/500g",
@@ -160,7 +153,8 @@
       "2026-11-15": "1149.99",
       "2026-11-16": "1149.99",
       "2026-11-17": "1149.99",
-      "2026-11-18": "1149.99"
+      "2026-11-18": "1149.99",
+      "2026-11-19": "1149.99"
     },
     "https://www.kabum.com.br/produto/632571/ssd-500gb-m-2-nvme-pcie-4-5000mb-s-leit-3000mb-s-grav-nv3-snv3s-500g-kingston": {
       "2026-11-10": "660.33",
@@ -169,7 +163,8 @@
       "2026-11-13": "660.33",
       "2026-11-16": "660.33",
       "2026-11-17": "660.33",
-      "2026-11-18": "660.33"
+      "2026-11-18": "660.33",
+      "2026-11-19": "660.33"
     }
   },
   "offers": []
