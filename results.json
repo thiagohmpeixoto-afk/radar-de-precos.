@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T12:45:15.905694+00:00",
+  "generated_at": "2026-11-22T18:39:39.752952+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
@@ -101,10 +101,10 @@
     {
       "store": "TerabyteShop",
       "url": "https://www.terabyteshop.com.br",
-      "status": "no_structured_prices",
+      "status": "blocked_or_http_error",
       "products_extracted": 0,
-      "http_status": 200,
-      "error": null
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
     },
     {
       "store": "Kalunga",
