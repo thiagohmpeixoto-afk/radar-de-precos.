@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T00:56:52.900675+00:00",
+  "generated_at": "2026-11-24T07:04:30.924007+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
@@ -20,7 +20,7 @@
         },
         {
           "name": "SSD Kingston 1TB Nv3 M.2 Nvme PCIe 4, Leitura 6000MB/s, Gravação 4000MB/s, Ultra Rápido - Snv3s/1000g",
-          "price": "1211.14",
+          "price": "1210.00",
           "currency": "BRL",
           "payment": "PIX",
           "url": "https://www.kabum.com.br/produto/633107/ssd-kingston-1tb-padrao-nv3-m-2-2280-nvme-4-0-gen-4x4-leitura-6000-e-gravacao-4000mbps-ultra-rapido-snv3s-1000g"
@@ -55,7 +55,7 @@
       "url": "https://www.amazon.com.br",
       "status": "no_structured_prices",
       "products_extracted": 0,
-      "http_status": 202,
+      "http_status": 200,
       "error": null
     },
     {
@@ -154,7 +154,7 @@
       "2026-11-21": "1130.50",
       "2026-11-22": "1130.50",
       "2026-11-23": "1211.14",
-      "2026-11-24": "1211.14"
+      "2026-11-24": "1210.00"
     },
     "https://www.kabum.com.br/produto/621162/ssd-kingston-nv3-1-tb-m-2-2280-pcie-4-0-x4-nvme-leitura-6000-mb-s-gravacao-4000-mb-s-azul-snv3s-1000g": {
       "2026-11-09": "1149.99",
