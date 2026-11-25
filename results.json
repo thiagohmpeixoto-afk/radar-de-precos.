@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T07:08:34.871297+00:00",
+  "generated_at": "2026-11-25T13:10:40.399353+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
@@ -55,7 +55,7 @@
       "url": "https://www.amazon.com.br",
       "status": "no_structured_prices",
       "products_extracted": 0,
-      "http_status": 202,
+      "http_status": 200,
       "error": null
     },
     {
