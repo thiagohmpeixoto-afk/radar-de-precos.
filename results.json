@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T01:00:09.003647+00:00",
+  "generated_at": "2026-11-28T07:01:39.824476+00:00",
   "minimum_discount": null,
   "maximum_price": null,
   "sources": [
@@ -45,10 +45,10 @@
     {
       "store": "Casas Bahia",
       "url": "https://www.casasbahia.com.br",
-      "status": "no_structured_prices",
+      "status": "blocked_or_http_error",
       "products_extracted": 0,
-      "http_status": 200,
-      "error": null
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
     },
     {
       "store": "Amazon Brasil",
@@ -69,10 +69,10 @@
     {
       "store": "Ponto",
       "url": "https://www.pontofrio.com.br",
-      "status": "no_structured_prices",
+      "status": "blocked_or_http_error",
       "products_extracted": 0,
-      "http_status": 200,
-      "error": null
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
     },
     {
       "store": "Carrefour",
@@ -101,10 +101,10 @@
     {
       "store": "TerabyteShop",
       "url": "https://www.terabyteshop.com.br",
-      "status": "no_structured_prices",
+      "status": "blocked_or_http_error",
       "products_extracted": 0,
-      "http_status": 200,
-      "error": null
+      "http_status": 403,
+      "error": "HTTP Error 403: Forbidden"
     },
     {
       "store": "Kalunga",
